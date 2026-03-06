@@ -71,6 +71,18 @@
         .fallback .spinner { display: none; }
         .fallback .status { color: #FFD600; font-size: 1.1rem; }
 
+        .download-btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.85rem 2rem;
+            background: #FFD600;
+            color: #1A1A1A;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            text-decoration: none;
+        }
+
         /* Estado: error de token */
         .error .spinner { display: none; }
         .error .status { color: #F44336; }
@@ -107,9 +119,15 @@
             window.location.href = deepLink;
 
             // Timeout: si seguimos en la pagina, la app no esta instalada
+            var apkUrl = 'https://github.com/deliriumlabs/mobi-link/releases/latest/download/app-clientes.apk';
             setTimeout(function() {
                 app.className = 'container fallback';
                 status.textContent = 'Instala la app Mobi Mobile para continuar.';
+                var btn = document.createElement('a');
+                btn.className = 'download-btn';
+                btn.href = apkUrl;
+                btn.textContent = 'Descargar App';
+                app.appendChild(btn);
             }, 2500);
         })();
     </script>
