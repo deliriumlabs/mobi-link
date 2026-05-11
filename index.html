@@ -100,35 +100,29 @@
 
     <script>
         (function() {
-            var app = document.getElementById('app');
             var status = document.getElementById('status');
-
-            // Leer token del query param ?t=TOKEN
             var params = new URLSearchParams(window.location.search);
             var token = params.get('t');
 
-            // Validar formato: 64 caracteres hexadecimales
-            if (!token || !/^[a-f0-9]{64}$/.test(token)) {
-                app.className = 'container error';
-                status.textContent = 'El enlace no es v\u00e1lido.';
+            if (!token || /^[a-f0-9]{64}$/.test(token) === false) {
+                document.getElementById('app').className = 'container error';
+                status.textContent = 'El enlace no es válido.';
                 return;
             }
 
-            // Intentar abrir deep link
-            var deepLink = 'mobimobile://auth/' + token;
-            window.location.href = deepLink;
+            var ua = navigator.userAgent;
+            var isAndroid = /Android/i.test(ua);
+            var webUrl = 'https://clientes.mobibus.mx/auth/' + token;
 
-            // Timeout: si seguimos en la pagina, la app no esta instalada
-            var apkUrl = 'https://github.com/deliriumlabs/mobi-link/releases/latest/download/app-clientes.apk';
-            setTimeout(function() {
-                app.className = 'container fallback';
-                status.textContent = 'Instala la app Mobi Mobile para continuar.';
-                var btn = document.createElement('a');
-                btn.className = 'download-btn';
-                btn.href = apkUrl;
-                btn.textContent = 'Descargar App';
-                app.appendChild(btn);
-            }, 2500);
+            if (isAndroid) {
+                window.location.href = 'mobimobile://auth/' + token;
+                setTimeout(function() {
+                    status.textContent = 'Abriendo en navegador...';
+                    window.location.href = webUrl;
+                }, 2500);
+            } else {
+                window.location.href = webUrl;
+            }
         })();
     </script>
 </body>
